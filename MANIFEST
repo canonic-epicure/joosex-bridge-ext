@@ -1,0 +1,9 @@
+.gitignore
+Build.PL
+demo/test.html
+demo/test.js
+demo/test1.js
+demo/test2.js
+lib/JooseX/Bridge/Ext.js
+MANIFEST			This list of files
+README
