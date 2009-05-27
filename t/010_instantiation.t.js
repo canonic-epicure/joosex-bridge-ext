@@ -1,5 +1,5 @@
 StartTest(function(t) {
-	t.plan(7)
+	t.plan(8)
 	
     //==================================================================================================================================================================================
     t.diag("Sanity")    
@@ -60,5 +60,16 @@ StartTest(function(t) {
     });
     
     t.ok(panel.title == 'Joosified! myPanel', 'myPanel was succefully subclassed from Ext.Panel')
+    
+    //==================================================================================================================================================================================
+    t.diag("Subclassing of native class with Joose.Proto.Class meta")
+    
+    ExtClass('aModule.aClass', {
+        isa : Ext.util.Observable
+    });
+    
+    var myOb = new aModule.aClass({});
+    
+    t.ok(myOb, 'Inheritance from Ext.util.Observable works correctly')
     
 })    
