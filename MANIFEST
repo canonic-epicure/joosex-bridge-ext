@@ -1,9 +1,10 @@
 .gitignore
 Build.PL
-demo/test.html
-demo/test.js
-demo/test1.js
-demo/test2.js
+Components.JS
 lib/JooseX/Bridge/Ext.js
-MANIFEST			This list of files
+lib/JooseX/Bridge/Ext/Convertor.js
+MANIFEST
 README
+t/010_instantiation.t.js
+t/020_inheriting.t.js
+t/index.html
