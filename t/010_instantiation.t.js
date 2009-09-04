@@ -25,7 +25,7 @@ StartTest(function(t) {
 	        }
 	    }
 	});
-	
+    
 	Ext.Window.meta.extend({
 	    does : [ Joosificator ]
 	});
