@@ -30,7 +30,7 @@
 	<body>
 		<script type="text/javascript">
 			Test.Run.Harness.Browser.Multi.my.configure({
-				title : 'Advanced attribute test suite',
+				title : 'JooseX.Bridge.Ext test suite',
 				
 				preload : [
 					'/inc/Task/Joose/Core.js',
@@ -44,7 +44,8 @@
 			
 			
 			Test.Run.Harness.Browser.Multi.my.start(
-				'010_instantiation.t.js'
+				'010_instantiation.t.js',
+				'020_inheriting.t.js'
 			)
 		</script>
 	</body>
