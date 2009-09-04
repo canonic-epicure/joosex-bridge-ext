@@ -14,8 +14,6 @@ StartTest(function(t) {
     t.ok(new Ext.Panel({ title : 'Joose' }), 'Panel was created')
     t.ok(new Ext.data.Store(), 'Store was created')
     
-    t.ok(new Ext.data.Store(), 'Store was created')
-    
     
     //==================================================================================================================================================================================
     t.diag("'Joosification' of native classes")
@@ -72,4 +70,11 @@ StartTest(function(t) {
     
     t.ok(myOb, 'Inheritance from Ext.util.Observable works correctly')
     
+    myOb.addEvents('event')
+    
+    myOb.on('event', function () {
+        t.pass('Event was fired')
+    })
+    
+    myOb.fireEvent('event')
 })    
