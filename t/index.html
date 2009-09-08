@@ -8,9 +8,10 @@
 		<link rel="stylesheet" type="text/css" href="/inc/Task/ExtJS/static/css/ext-all.css">
 		<script type="text/javascript" src="/inc/Task/ExtJS/Adapter/Ext.js"></script>
 		
-
+        <script type="text/javascript" src="/inc/JooseX/Meta/Lazy.js"></script>
 		<script type="text/javascript" src="/inc/JooseX/Bridge/Ext.js"></script>
 		<script type="text/javascript">
+		    JooseX.Bridge.Ext.meta.extend({ does : JooseX.Meta.Lazy })
 			Ext.extend = JooseX.Bridge.Ext.my.extend; 
 		</script>
 		
@@ -38,6 +39,9 @@
 					"/inc/Task/ExtJS/Adapter/Ext.js",
 					"/inc/JooseX/Meta/Lazy.js",
 					'JooseX.Bridge.Ext',
+                    {
+                        text : "JooseX.Bridge.Ext.meta.extend({ does : JooseX.Meta.Lazy })"
+                    },
 					'JooseX.Bridge.Ext.Convertor',
 					"/inc/Task/ExtJS/Debug/All.js"
 				],
