@@ -59,6 +59,8 @@ StartTest(function(t) {
     
     t.ok(panel.title == 'Joosified! myPanel', 'myPanel was succefully subclassed from Ext.Panel')
     
+    
+    
     //==================================================================================================================================================================================
     t.diag("Subclassing of native class with Joose.Proto.Class meta")
     
