@@ -1,13 +1,14 @@
-use Module::Build::JSAN::Installable;
+use inc::Module::JSAN::DSL;
 
-my $build = Module::Build::JSAN::Installable->new(
-	module_name    => 'ExtX.Reference.Slot',
-	create_makefile_pl => 'passthrough',
-	dist_version   => 0.01,
-	dist_author   => 'SamuraiJack',
-	dist_abstract  => 'Extension for accessing ExtJS hierarchy components with mnemonic names',
-	license        => 'perl',
-);
+name            JooseX.Bridge.Ext
 
-$build->create_build_script;
+version         0.01
+author          'Nickolay (SamuraiJack) Platonov <root@symbie.org>'
+
+abstract        'Bridge from Joose to Ext3 class system'
+license         bsd
+
+
+requires        Joose   3.001
+
 

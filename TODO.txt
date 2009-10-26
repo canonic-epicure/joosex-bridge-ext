@@ -1,0 +1,9 @@
+TODO
+====
+
+- fully intercept constructor (like lazy meta do) to allow traits on all objects 
+
+
+
+DONE
+====

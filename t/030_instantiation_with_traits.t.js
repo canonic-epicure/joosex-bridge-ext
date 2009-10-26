@@ -1,6 +1,6 @@
 StartTest(function(t) {
     
-	t.plan(1)
+	t.plan(6)
 	
     
     //==================================================================================================================================================================================
@@ -21,7 +21,6 @@ StartTest(function(t) {
     
     t.ok(myPanel, "'myPanel' class was created")
     
-    
     var panel = new myPanel({
         traits : Role({
             has : {
@@ -38,7 +37,7 @@ StartTest(function(t) {
     
     t.ok(panel, "Panel was instantiated")
     
-    t.ok(panel.isDetached(), 'And its detached')
+    t.ok(panel.meta.isDetached, 'And its detached')
     
     
     t.ok(panel.meta.hasAttribute('attrViaTrait'), "Panel received the trait's attribute")
