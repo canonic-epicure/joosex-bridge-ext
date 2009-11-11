@@ -22,22 +22,22 @@ StartTest(function(t) {
 	Role('Joosificator', {
 	    before : {
 	        render : function(){
-	            this.title = 'Joosified! ' + this.title;
+	            this.title = 'Joosified! ' + this.title
 	        }
 	    }
-	});
+	})
     
 	Ext.Window.meta.extend({
 	    does : [ Joosificator ]
-	});
+	})
     
     var win2 = new Ext.Window({
         title : 'Joose Bridge',
         width : 300,
         height : 300
-    });
+    })
     
-    win2.show();
+    win2.show()
     
     t.ok(win2.title == 'Joosified! Joose Bridge', 'Ext.Window were jusified')
     
@@ -49,14 +49,14 @@ StartTest(function(t) {
 	    isa : Ext.Panel,
 	    
 	    does : [ Joosificator ]
-	});
+	})
     
     var panel = new myPanel({
         title : 'myPanel',
         width : 300,
         height : 300,
         renderTo : Ext.getBody()
-    });
+    })
     
     t.ok(panel.title == 'Joosified! myPanel', 'myPanel was succefully subclassed from Ext.Panel')
     
@@ -67,9 +67,9 @@ StartTest(function(t) {
     
     ExtClass('aModule.aClass', {
         isa : Ext.util.Observable
-    });
+    })
     
-    var myOb = new aModule.aClass({});
+    var myOb = new aModule.aClass({})
     
     t.ok(myOb, 'Inheritance from Ext.util.Observable works correctly')
     
