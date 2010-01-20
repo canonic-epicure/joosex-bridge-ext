@@ -3,6 +3,7 @@ TODO
 
 - fully intercept constructor (like lazy meta do) to allow traits on all objects 
 
+- deal with Opera bug (typeof Regex)
 
 
 DONE

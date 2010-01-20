@@ -9,6 +9,8 @@ abstract        'Bridge from Joose to Ext3 class system'
 license         bsd
 
 
-requires        Joose   3.001
+requires        Joose           3.01
+requires        Task.ExtJS      3.1.0
 
 
+docs_markup     mmd

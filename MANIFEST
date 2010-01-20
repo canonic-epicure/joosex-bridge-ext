@@ -10,3 +10,4 @@ t/020_inheriting.t.js
 t/030_instantiation_with_traits.t.js
 t/index.html
 TODO.txt
+META.json
