@@ -2,7 +2,7 @@ Name
 ====
 
 
-JooseX.Bridge.Ext - metaclass, bridging the class system of the ExtJS framework to Joose (or vice-versa, as you prefere). 
+JooseX.Bridge.Ext - metaclass, allowing you subclass ExtJS classes using Joose notation (or modify standard ExtJS classes) 
 
 
 SYNOPSIS
@@ -25,28 +25,199 @@ SYNOPSIS
         
 
 
+        Class('Test.Run.Harness.Browser.UI.TestGrid', {
+        
+            xtype   : 'testgrid', 
+            
+            isa     : Ext.grid.GridPanel,
+            
+            does    : ExtX.Some.Role.For.Grid,
+            
+            ....
+        })
+
+
 DESCRIPTION
 ===========
 
-`JooseX.Bridge.Ext` is a custom metaclass, which allows to bridge the class system of ExtJS framework to Joose.
-It transparently turns all ExtJS classes into Joose classes. , and a
+`JooseX.Bridge.Ext` is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefere).
+
+It transparently turns all ExtJS classes into Joose classes, and allows you to use any of Joose features for them.
+Pleas refer to Joose [documentation](http://openjsan.org/go/?l=Joose), to know why you might want to do that :) 
+
+
+EXAMPLES
+========
+
+        ExtClass('My.Panel', {
+            isa : Ext.Panel
+        })
+        
+
+        // equivalent of:
+        
+        Class('My.Panel', {
+            meta : JooseX.Bridge.Ext,
+            
+            isa : Ext.Panel
+        })
+        
+        
+        // automatically register the class with default xtype:
+        
+        var panel = Ext.ComponentMgr.create({
+            xtype : 'My.Panel'
+        })
+        
+        
+        // "meta : JooseX.Bridge.Ext" - can be omitted:
+
+        Class('Test.Run.Harness.Browser.UI.TestGrid', {
+        
+            xtype   : 'testgrid', //custom xtype
+            
+            isa     : Ext.grid.GridPanel,
+            
+            does    : ExtX.Some.Role.For.Grid,
+            
+            trait   : JooseX.CPS,
+            
+            
+            has : {
+                harness   : {
+                    is          : 'rw',
+                    required    : true
+                }
+            },
+            
+            
+            before : {
+                initComponent : function () {
+                    var sm = new Ext.grid.CheckboxSelectionModel({ singleSelect : false })
+                    
+                    this.addEvents('rowselect')
+                    
+                    Ext.apply(this, {
+                        ....
+                    })
+                }
+            },
+            
+            
+            after : {
+                initComponent : function () {
+                    ....
+                }
+            },
+            
+            
+            methods : {
+                
+                onRowSelect : function (selModel, indx, record) {
+                    this.fireEvent('rowselect', this, record)
+                }
+            }
+            
+        })
+
+USAGE
+=====
+
+First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the convertors.
+
+This package comes with two convertors : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
+
+The 2nd convertor requires `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to `JooseX.Meta.Lazy` 
+[documentation](http://openjsan.org/go?l=JooseX.Meta.Lazy) for details.
+
+See the above for examples how you can use new metaclass.
+
+
+`xtype` builder
+---------------
+
+You can use new builder `xtype` in your class declaration. It will register your class with `Ext.reg` call.
+If you will not specify `xtype`, your class will be registered using its name. 
+
+
+Metaclass inheritance
+---------------------
+
+By default, when Joose class inherit from superclass, it will be created using the metaclass of the parent.
+So generally, when subclassing ExtJS classes you can omit the metaclass (the 3rd example). Sometimes though,
+the metaclass needs to be explicitly specified (see [Explicit metaclass specification])
+
 
 
 CAVEATS
 ========
 
-Initializers
+Make sure you've read this section if you have any problems using the bridge.
 
 
+Initial attribute values and setters
+------------------------------------
+
+This metaclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
+
+Joose provides system constructor for classes and classes should use `BUILD` and `initialize` for initialization.
+[Details](http://openjsan.org/go?l=Joose.Manual.Construction) Joose also uses getters and setters concepts.
+
+Lightweight class system of ExtJS, simply calls the constructor of superclass. ExtJS applies provided configuration
+values directly to instance.
+
+This metaclass first calls default Joose constructor, then the constructor from ExtJS.  
+
+This means, that your class will be initialized "in Joose way" first, using any custom setter methods.
+Then, it will be initialized "in ExtJS way", effectively overriding the initial values from previous step.
+Also, the native setter method may be called too early - before the ExtJS constructor.
+
+For example this declaration will throw an exception:
+
+        Class('My.Panel', {
+            isa : Ext.Panel,
+            
+            has : {
+                title : {
+                    is : 'rw',
+                    init : 'Joosified'
+                }
+            }
+        })
+
+`Ext.Panel` have `setTitle` method, which Joose treats like setter, and tries to initialize the attribute with it.
+However the call to `setTitle` relies on already initialized instance (it will fire the 'titlechange' event), so 
+the exception raise.
+
+The solution for such situations will be to use basic attributes, which do not have getters and setters:
+
+        Class('My.Panel', {
+            isa : Ext.Panel,
+            
+            have : {
+                title : 'Joosified'
+            }
+        })
+        
+[Details](http://openjsan.org/go?l=Joose.Manual.Attributes)
 
 
-USAGE
-=====
+Explicit metaclass specification
+--------------------------------
 
-First, include the Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the convertors.
-This package comes with two convertors : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
-The 2nd convertor requires the `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to `JooseX.Meta.Lazy` 
-[documentation](http://openjsan.org/go?l=JooseX.Meta.Lazy) for details. 
+Some of the classes in ExtJS framework are defined outside of its class system, using "raw JavaScript".
+Such classes will have the low-level metaclass `Joose.Proto.Class`. If you will inherit from such class, 
+you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case
+for Ext >3.0, but still.
+
+An example will be inheritance from Ext.Template:
+
+        Class('My.Template', {
+            //explicit metaclass
+            meta : JooseX.Bridge.Ext,
+            
+            isa : Ext.Template
+        })
 
 
 GETTING HELP
@@ -62,7 +233,7 @@ SEE ALSO
 
 [http://github.com/SamuraiJack/joosex-bridge-ext/](http://github.com/SamuraiJack/joosex-bridge-ext/)
 
-Web page of this extensions
+Web page of this package
 
 [http://openjsan.org/go/?l=Joose](http://openjsan.org/go/?l=Joose)
 
