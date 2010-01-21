@@ -7,16 +7,7 @@ StartTest(function(t) {
     t.diag("Instantiation with traits")
     
     Class('myPanel', {
-	    isa : Ext.Panel,
-	    
-        has : {
-            title : {
-                is : 'rw',
-                init : function () {
-                    return 'Joosified'
-                }
-            }
-        }
+	    isa : Ext.Panel
 	})
     
     t.ok(myPanel, "'myPanel' class was created")

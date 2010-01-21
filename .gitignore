@@ -6,3 +6,4 @@ doc
 .externalToolBuilders
 MANIFEST.bak
 META.json
+/inc/*

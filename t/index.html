@@ -6,13 +6,10 @@
 		<!-- Ext bridge  -->
 		
 		<link rel="stylesheet" type="text/css" href="/jsan/Task/ExtJS/static/css/ext-all.css">
+        
 		<script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"></script>
-		
 		<script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
-		<script type="text/javascript">
-			Ext.extend = JooseX.Bridge.Ext.my.extend; 
-		</script>
-		
+        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/LazyConvertor.js"></script>
 		<script type="text/javascript" src="/jsan/Task/ExtJS/All.js"></script>
 		
 		<!-- eof Ext bridge  -->
@@ -36,10 +33,7 @@
 					"/jsan/Task/ExtJS/Adapter/Ext.js",
 					"/jsan/JooseX/Meta/Lazy.js",
 					'JooseX.Bridge.Ext',
-                    {
-                        text : "JooseX.Bridge.Ext.meta.extend({ does : JooseX.Meta.Lazy })"
-                    },
-					'JooseX.Bridge.Ext.Convertor',
+                    'JooseX.Bridge.Ext.LazyConvertor',
 					"/jsan/Task/ExtJS/All.js"
 				],
 				
