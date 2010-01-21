@@ -35,12 +35,17 @@ SYNOPSIS
             
             ....
         })
+        
+        
+        Ext.Container.meta.extend({
+            does : ExtX.Some.Role.For.Container
+        })
 
 
 DESCRIPTION
 ===========
 
-`JooseX.Bridge.Ext` is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefere).
+`JooseX.Bridge.Ext` is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefer).
 
 It transparently turns all ExtJS classes into Joose classes, and allows you to use any of Joose features for them.
 Pleas refer to Joose [documentation](http://openjsan.org/go/?l=Joose), to know why you might want to do that :) 
