@@ -44,9 +44,9 @@
 #   Mac OSX SMB mount metadata files
 \B\._
 # Avoid archives of this distribution
-\bExtX.Reference.Slot-[\d\.\_]+
 \.project$
 ^\.git\b
 \.tar.gz$
 ^tests/lib/
-ExtX.Reference.Slot-0.01
+^JooseX.Bridge.Ext-[\d\.\_]+
+^MYMETA.yml$

@@ -9,12 +9,16 @@ SYNOPSIS
 ========
 
         <!-- Joose  -->
-        
         <script type="text/javascript" src="/jsan/Task/Joose/Core.js"></script>
+        
+        
+        <!-- Optional JooseX.Meta.Lazy extension  -->
+        <script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"></script>
     
         <!-- Ext bridge  -->
         
         <script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"></script>
+        
         
         <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
         <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/[Lazy]Convertor.js"></script>
@@ -40,6 +44,7 @@ SYNOPSIS
         Ext.Container.meta.extend({
             does : ExtX.Some.Role.For.Container
         })
+        
 
 
 DESCRIPTION
@@ -68,14 +73,14 @@ EXAMPLES
         })
         
         
-        // automatically register the class with default xtype:
+        // automatically register the class with its name as default xtype:
         
         var panel = Ext.ComponentMgr.create({
             xtype : 'My.Panel'
         })
         
         
-        // "meta : JooseX.Bridge.Ext" - can be omitted:
+        // "meta : JooseX.Bridge.Ext" - can be omitted, custom xtype can be specified:
 
         Class('Test.Run.Harness.Browser.UI.TestGrid', {
         
@@ -165,8 +170,8 @@ Initial attribute values and setters
 
 This metaclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
 
-Joose provides system constructor for classes and classes should use `BUILD` and `initialize` for initialization.
-[Details](http://openjsan.org/go?l=Joose.Manual.Construction) Joose also uses getters and setters concepts.
+Joose provides system constructor for classes and classes should use `BUILD` and `initialize` for initialization ([details](http://openjsan.org/go?l=Joose.Manual.Construction)) 
+Joose also uses getters and setters concepts.
 
 Lightweight class system of ExtJS, simply calls the constructor of superclass. ExtJS applies provided configuration
 values directly to instance.
@@ -190,7 +195,7 @@ For example this declaration will throw an exception:
             }
         })
 
-`Ext.Panel` have `setTitle` method, which Joose treats like setter, and tries to initialize the attribute with it.
+`Ext.Panel` have `setTitle` method, which Joose treats like setter, and tries to initialize the attribute with it (before call to ExtJS constructor).
 However the call to `setTitle` relies on already initialized instance (it will fire the 'titlechange' event), so 
 the exception raise.
 
@@ -204,7 +209,7 @@ The solution for such situations will be to use basic attributes, which do not h
             }
         })
         
-[Details](http://openjsan.org/go?l=Joose.Manual.Attributes)
+[Details on Joose attributes](http://openjsan.org/go?l=Joose.Manual.Attributes)
 
 
 Explicit metaclass specification
