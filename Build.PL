@@ -10,7 +10,7 @@ license         bsd
 
 
 requires        Task.Joose.Stable   3.04
-requires        Task.ExtJS          3.1.0
+requires        Task.ExtJS          3.100.000
 
 
 docs_markup     mmd
