@@ -13,7 +13,7 @@ var INC = (isNode ? require.paths : []).concat('../lib', '/jsan')
 
 
 Harness.configure({
-    title     : 'JooseX.Bridge.Ext Test Suite',
+    title       : 'JooseX.Bridge.Ext Test Suite',
     
     preload : [
         'jsan:Task.Joose.Stable',

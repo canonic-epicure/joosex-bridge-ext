@@ -1,8 +1,5 @@
 StartTest(function(t) {
     
-	t.plan(6)
-	
-    
     //==================================================================================================================================================================================
     t.diag("Instantiation with traits")
     
@@ -36,4 +33,6 @@ StartTest(function(t) {
 
     
     t.ok(panel.el.dom, "Panel was rendered correctly")
+    
+    t.done()
 })    
