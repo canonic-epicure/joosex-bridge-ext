@@ -33,6 +33,7 @@ Harness.start(
     '020_inheriting.t.js',
     '030_instantiation_with_traits.t.js',
     '040_custom_grid_column.t.js',
-    '041_extclass_promoted_from_module.t.js'
+    '041_extclass_promoted_from_module.t.js',
+    '050_init_instance.t.js'
 )
 
