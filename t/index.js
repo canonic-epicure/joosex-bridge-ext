@@ -16,7 +16,7 @@ Harness.configure({
     title       : 'JooseX.Bridge.Ext Test Suite',
     
     preload : [
-        'jsan:Task.Joose.Stable',
+        'jsan:Task.Joose.Core',
         
         "jsan:Task.ExtJS.Adapter.Ext",
         

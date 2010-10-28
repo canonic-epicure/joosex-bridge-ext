@@ -9,6 +9,7 @@ StartTest(function(t) {
     
     t.ok(myPanel, "'myPanel' class was created")
     
+    
     var panel = new myPanel({
         traits : Role({
             has : {
