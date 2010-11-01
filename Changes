@@ -1,0 +1,7 @@
+Release history for JooseX-Bridge-Ext:
+
+{{ $NEXT }}
+
+    - adapted to recent changes in Joose
+    - attributes no longer gets initialize twice
+    - first release on `npm`
