@@ -1,10 +1,4 @@
-_build
-Build
-blib
-doc
+.build
 .project
 .externalToolBuilders
-MANIFEST.bak
-META.json
-/inc/*
-/JooseX.Bridge.Ext-*.tar.gz
+/JooseX-Bridge-Ext-*
