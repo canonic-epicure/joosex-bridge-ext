@@ -2,6 +2,8 @@ Release history for JooseX-Bridge-Ext:
 
 {{ $NEXT }}
 
+0.2.2     2010-11-01 15:07
+
     - corrected `constructor` symbol in superclass'es prototype if needed (ExtJS behavior)
 
 0.2.1     2010-11-01 11:40
