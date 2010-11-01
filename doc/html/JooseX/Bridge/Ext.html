@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="http://bit.ly/multi_markdown_style_css " />
+	</head>
+<body>
+<h1 id="name">Name</h1>
+
+<p>JooseX.Bridge.Ext - metaclass, allowing you subclass ExtJS classes using Joose notation (or modify standard ExtJS classes) </p>
+
+<h1 id="synopsis">SYNOPSIS</h1>
+
+<pre><code>    &lt;!-- Joose  --&gt;
+    &lt;script type="text/javascript" src="/jsan/Task/Joose/Core.js"&gt;&lt;/script&gt;
+
+
+    &lt;!-- Optional JooseX.Meta.Lazy extension  --&gt;
+    &lt;script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"&gt;&lt;/script&gt;
+
+    &lt;!-- Ext bridge  --&gt;
+
+    &lt;script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"&gt;&lt;/script&gt;
+
+
+    &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/[Lazy]Convertor.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="/jsan/Task/ExtJS/All.js"&gt;&lt;/script&gt;
+
+    &lt;!-- eof Ext bridge  --&gt;
+
+
+
+    Class('Test.Run.Harness.Browser.UI.TestGrid', {
+
+        xtype   : 'testgrid', 
+
+        isa     : Ext.grid.GridPanel,
+
+        does    : ExtX.Some.Role.For.Grid,
+
+        ....
+    })
+
+
+    Ext.Container.meta.extend({
+        does : ExtX.Some.Role.For.Container
+    })
+</code></pre>
+
+<h1 id="description">DESCRIPTION</h1>
+
+<p><code>JooseX.Bridge.Ext</code> is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefer).</p>
+
+<p>It transparently turns all ExtJS classes into Joose classes, and allows you to use any of Joose features for them.
+Pleas refer to Joose <a href="http://openjsan.org/go/?l=Joose">documentation</a>, to know why you might want to do that :) </p>
+
+<h1 id="examples">EXAMPLES</h1>
+
+<pre><code>    ExtClass('My.Panel', {
+        isa : Ext.Panel
+    })
+
+
+    // equivalent of:
+
+    Class('My.Panel', {
+        meta : JooseX.Bridge.Ext,
+
+        isa : Ext.Panel
+    })
+
+
+    // automatically register the class with its name as default xtype:
+
+    var panel = Ext.ComponentMgr.create({
+        xtype : 'My.Panel'
+    })
+
+
+    // "meta : JooseX.Bridge.Ext" - can be omitted, custom xtype can be specified:
+
+    Class('Test.Run.Harness.Browser.UI.TestGrid', {
+
+        xtype   : 'testgrid', //custom xtype
+
+        isa     : Ext.grid.GridPanel,
+
+        does    : ExtX.Some.Role.For.Grid,
+
+        trait   : JooseX.CPS,
+
+
+        has : {
+            harness   : {
+                is          : 'rw',
+                required    : true
+            }
+        },
+
+
+        before : {
+            initComponent : function () {
+                var sm = new Ext.grid.CheckboxSelectionModel({ singleSelect : false })
+
+                this.addEvents('rowselect')
+
+                Ext.apply(this, {
+                    ....
+                })
+            }
+        },
+
+
+        after : {
+            initComponent : function () {
+                ....
+            }
+        },
+
+
+        methods : {
+
+            onRowSelect : function (selModel, indx, record) {
+                this.fireEvent('rowselect', this, record)
+            }
+        }
+
+    })
+</code></pre>
+
+<h1 id="usage">USAGE</h1>
+
+<p>First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the convertors.</p>
+
+<p>This package comes with two convertors : <code>JooseX.Bridge.Ext.Convertor</code> and <code>JooseX.Bridge.Ext.LazyConvertor</code>.</p>
+
+<p>The 2nd convertor requires <code>JooseX.Meta.Lazy</code> installed, and makes all classes lazy. Please refer to <code>JooseX.Meta.Lazy</code> 
+<a href="http://openjsan.org/go?l=JooseX.Meta.Lazy">documentation</a> for details.</p>
+
+<p>See the above for examples how you can use new metaclass.</p>
+
+<h2 id="xtypebuilder"><code>xtype</code> builder</h2>
+
+<p>You can use new builder <code>xtype</code> in your class declaration. It will register your class with <code>Ext.reg</code> call.
+If you will not specify <code>xtype</code>, your class will be registered using its name. </p>
+
+<h2 id="metaclassinheritance">Metaclass inheritance</h2>
+
+<p>By default, when Joose class inherit from superclass, it will be created using the metaclass of the parent.
+So generally, when subclassing ExtJS classes you can omit the metaclass (the 3rd example). Sometimes though,
+the metaclass needs to be explicitly specified (see <a href="#explicitmetaclassspecification" title="Explicit metaclass specification">Explicit metaclass specification</a>)</p>
+
+<h1 id="caveats">CAVEATS</h1>
+
+<p>taclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
+Make sure you've read this section if you have any problems using the bridge.</p>
+
+<h2 id="attributesettersandextjsmethods">Attribute setters and ExtJS methods</h2>
+
+<p>The native setter method may be called too early - before the ExtJS instance has been correctly initialize.</p>
+
+<p>For example, this declaration will throw an exception:</p>
+
+<pre><code>    Class('My.Panel', {
+        isa : Ext.Panel,
+
+        has : {
+            title : {
+                is : 'rw',
+                init : 'Joosified'
+            }
+        }
+    })
+</code></pre>
+
+<p><code>Ext.Panel</code> have <code>setTitle</code> method, which Joose treats like setter, and tries to initialize the attribute with it (before call to ExtJS constructor).
+However the call to <code>setTitle</code> relies on already initialized instance (it will fire the 'titlechange' event), so 
+the exception raises.</p>
+
+<p>The solution for such situations will be to use attributes w/o setters or even basic attributes:</p>
+
+<pre><code>    Class('My.Panel', {
+        isa : Ext.Panel,
+
+        has : {
+            title : 'Joosified'
+        }
+
+        // or even
+
+        have : {
+            title : 'Joosified'
+        }
+    })
+</code></pre>
+
+<p><a href="http://openjsan.org/go?l=Joose.Manual.Attributes">Details on Joose attributes</a></p>
+
+<h2 id="explicitmetaclassspecification">Explicit metaclass specification</h2>
+
+<p>Some of the classes in ExtJS framework are defined outside of its class system, using "raw JavaScript".
+Such classes will have the low-level metaclass <code>Joose.Proto.Class</code>. If you will inherit from such class, 
+you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case
+for Ext >3.0, but still.</p>
+
+<p>An example will be inheritance from Ext.Template:</p>
+
+<pre><code>    Class('My.Template', {
+        //explicit metaclass
+        meta : JooseX.Bridge.Ext,
+
+        isa : Ext.Template
+    })
+</code></pre>
+
+<h1 id="gettinghelp">GETTING HELP</h1>
+
+<p>This extension is supported via github issues tracker: <a href="http://github.com/SamuraiJack/joosex-bridge-ext/issues">http://github.com/SamuraiJack/joosex-bridge-ext/issues</a></p>
+
+<p>For general Joose questions you can also visit #joose on irc.freenode.org or the forum at: <a href="http://joose.it/forum">http://joose.it/forum</a> </p>
+
+<h1 id="seealso">SEE ALSO</h1>
+
+<p><a href="http://github.com/SamuraiJack/joosex-bridge-ext/">http://github.com/SamuraiJack/joosex-bridge-ext/</a></p>
+
+<p>Web page of this package</p>
+
+<p><a href="http://openjsan.org/go/?l=Joose">http://openjsan.org/go/?l=Joose</a></p>
+
+<p>General documentation for Joose</p>
+
+<h1 id="bugs">BUGS</h1>
+
+<p>All complex software has bugs lurking in it, and this module is no exception.</p>
+
+<p>Please report any bugs through the web interface at <a href="http://github.com/SamuraiJack/joosex-bridge-ext/issues">http://github.com/SamuraiJack/joosex-bridge-ext/issues</a></p>
+
+<h1 id="authors">AUTHORS</h1>
+
+<p>Nickolay Platonov <a href="mailto:nplatonov@cpan.org">nplatonov@cpan.org</a></p>
+
+<h1 id="copyrightandlicense">COPYRIGHT AND LICENSE</h1>
+
+<p>Copyright (c) 2009, Nickolay Platonov</p>
+
+<p>All rights reserved.</p>
+
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+
+<ul>
+<li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
+<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
+<li>Neither the name of Nickolay Platonov nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. </li>
+</ul>
+
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. </p>
+</body>
+</html>
