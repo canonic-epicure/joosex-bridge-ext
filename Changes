@@ -2,6 +2,8 @@ Release history for JooseX-Bridge-Ext:
 
 {{ $NEXT }}
 
+0.2.3     2010-11-16 18:04
+
     - fixed bug: do not update 'constructor' property of superclass prototype for "raw" JS classes
 
 0.2.2     2010-11-01 15:07
