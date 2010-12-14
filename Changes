@@ -2,6 +2,8 @@ Release history for JooseX-Bridge-Ext:
 
 {{ $NEXT }}
 
+0.3.0     2010-12-14 18:08
+
     - bridge is no longer obstrusive and will works with unmodified ExtJS sources (successfully tested with 3.3.1)
     - updated docs
 
