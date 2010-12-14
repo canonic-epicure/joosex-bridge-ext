@@ -23,7 +23,7 @@ Harness.configure({
         'JooseX.Bridge.Ext',
         'JooseX.Bridge.Ext.Convertor',
         
-        "jsan:Task.ExtJS.All"
+        "jsan:Task.ExtJS.Debug.All"
     ]
 })
 
@@ -34,6 +34,6 @@ Harness.start(
     '030_instantiation_with_traits.t.js',
     '040_custom_grid_column.t.js',
     '041_extclass_promoted_from_module.t.js',
-    '050_init_instance.t.js'
+    '050_init_instance.t.js',
+    '060_original_extend.t.js'
 )
-

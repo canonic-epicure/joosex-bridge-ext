@@ -10,19 +10,13 @@ SYNOPSIS
         <!-- Joose  -->
         <script type="text/javascript" src="/jsan/Task/Joose/Core.js"></script>
         
-        
-        <!-- Optional JooseX.Meta.Lazy extension  -->
-        <script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"></script>
     
-        <!-- Ext bridge  -->
-        
-        <script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"></script>
-        
+        <!-- ExtJS adapter -->
+        <script type="text/javascript" src="ext-3.3.1/adapter/ext/ext-base.js"></script>
         
         <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
-        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/[Lazy]Convertor.js"></script>
         
-        <script type="text/javascript" src="/jsan/Task/ExtJS/All.js"></script>
+        <script type="text/javascript" src="ext-3.3.1/ext-all.js"></script>
         
         <!-- eof Ext bridge  -->
         
@@ -58,16 +52,7 @@ Pleas refer to Joose [documentation](http://joose.github.com/Joose/), to know wh
 EXAMPLES
 ========
 
-        ExtClass('My.Panel', {
-            isa : Ext.Panel
-        })
-        
-
-        // equivalent of:
-        
         Class('My.Panel', {
-            meta : JooseX.Bridge.Ext,
-            
             isa : Ext.Panel
         })
         
@@ -79,11 +64,10 @@ EXAMPLES
         })
         
         
-        // "meta : JooseX.Bridge.Ext" - can be omitted, custom xtype can be specified:
-
         Class('Test.Run.Harness.Browser.UI.TestGrid', {
         
-            xtype   : 'testgrid', //custom xtype
+            // custom xtype
+            xtype   : 'testgrid', 
             
             isa     : Ext.grid.GridPanel,
             
@@ -132,9 +116,9 @@ EXAMPLES
 USAGE
 =====
 
-First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the convertors.
+First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the converters.
 
-This package comes with two convertors : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
+This package comes with two converters : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
 
 The 2nd convertor requires `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to `JooseX.Meta.Lazy` 
 [documentation](http://samuraijack.github.com/JooseX-Meta-Lazy) for details.
