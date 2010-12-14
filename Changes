@@ -2,6 +2,9 @@ Release history for JooseX-Bridge-Ext:
 
 {{ $NEXT }}
 
+    - bridge is no longer obstrusive and will works with unmodified ExtJS sources (successfully tested with 3.3.1)
+    - updated docs
+
 0.2.3     2010-11-16 18:04
 
     - fixed bug: do not update 'constructor' property of superclass prototype for "raw" JS classes
