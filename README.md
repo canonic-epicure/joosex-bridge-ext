@@ -1,7 +1,6 @@
 Name
 ====
 
-
 JooseX.Bridge.Ext - metaclass, allowing you subclass ExtJS classes using Joose notation (or modify standard ExtJS classes) 
 
 
@@ -11,21 +10,16 @@ SYNOPSIS
         <!-- Joose  -->
         <script type="text/javascript" src="/jsan/Task/Joose/Core.js"></script>
         
-        
-        <!-- Optional JooseX.Meta.Lazy extension  -->
-        <script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"></script>
     
-        <!-- Ext bridge  -->
-        
-        <script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"></script>
-        
+        <!-- ExtJS bridged  -->
+        <script type="text/javascript" src="ext-3.3.1/adapter/ext/ext-base.js"></script>
         
         <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
-        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/[Lazy]Convertor.js"></script>
+        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/Convertor.js"></script>
         
-        <script type="text/javascript" src="/jsan/Task/ExtJS/All.js"></script>
+        <script type="text/javascript" src="ext-3.3.1/ext-all.js"></script>
         
-        <!-- eof Ext bridge  -->
+        <!-- eof ExtJS bridged  -->
         
 
 
@@ -46,6 +40,22 @@ SYNOPSIS
         })
         
 
+INSTALLATION
+============
+
+See [Joose docs](http://joose.github.com/Joose) for installation instructions. 
+
+From `npm`:
+    
+    > [sudo] npm install joosex-bridge-ext
+    
+Or you can download the tarball from one the sites:
+
+<http://nodul.es/modules/joosex-bridge-ext>
+
+<http://npm.mape.me/> (filter the modules for `joosex-bridge-ext` term)
+
+
 
 DESCRIPTION
 ===========
@@ -53,38 +63,18 @@ DESCRIPTION
 `JooseX.Bridge.Ext` is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefer).
 
 It transparently turns all ExtJS classes into Joose classes, and allows you to use any of Joose features for them.
-Pleas refer to Joose [documentation](http://openjsan.org/go/?l=Joose), to know why you might want to do that :) 
+Pleas refer to Joose [documentation](http://joose.github.com/Joose/), to know why you might want to do that :)
+
+This extension will work with unmodified ExtJS sources! 
 
 
 EXAMPLES
 ========
 
-        ExtClass('My.Panel', {
-            isa : Ext.Panel
-        })
-        
-
-        // equivalent of:
-        
-        Class('My.Panel', {
-            meta : JooseX.Bridge.Ext,
-            
-            isa : Ext.Panel
-        })
-        
-        
-        // automatically register the class with its name as default xtype:
-        
-        var panel = Ext.ComponentMgr.create({
-            xtype : 'My.Panel'
-        })
-        
-        
-        // "meta : JooseX.Bridge.Ext" - can be omitted, custom xtype can be specified:
-
         Class('Test.Run.Harness.Browser.UI.TestGrid', {
         
-            xtype   : 'testgrid', //custom xtype
+            // custom xtype, if not provided - class name will be used
+            xtype   : 'testgrid', 
             
             isa     : Ext.grid.GridPanel,
             
@@ -133,14 +123,11 @@ EXAMPLES
 USAGE
 =====
 
-First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the convertors.
+First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the converters.
 
-This package comes with two convertors : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
+This package comes with two converters : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
 
-The 2nd convertor requires `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to `JooseX.Meta.Lazy` 
-[documentation](http://openjsan.org/go?l=JooseX.Meta.Lazy) for details.
-
-See the above for examples how you can use new metaclass.
+The 2nd converter requires `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to the section below for details.
 
 
 `xtype` builder
@@ -162,87 +149,95 @@ the metaclass needs to be explicitly specified (see [Explicit metaclass specific
 CAVEATS
 ========
 
-taclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
+This metaclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
 Make sure you've read this section if you have any problems using the bridge.
-
-
-Attribute setters and ExtJS methods
-------------------------------------
-
-The native setter method may be called too early - before the ExtJS instance has been correctly initialize.
-
-For example, this declaration will throw an exception:
-
-        Class('My.Panel', {
-            isa : Ext.Panel,
-            
-            has : {
-                title : {
-                    is : 'rw',
-                    init : 'Joosified'
-                }
-            }
-        })
-
-`Ext.Panel` have `setTitle` method, which Joose treats like setter, and tries to initialize the attribute with it (before call to ExtJS constructor).
-However the call to `setTitle` relies on already initialized instance (it will fire the 'titlechange' event), so 
-the exception raises.
-
-The solution for such situations will be to use attributes w/o setters or even basic attributes:
-
-        Class('My.Panel', {
-            isa : Ext.Panel,
-            
-            has : {
-                title : 'Joosified'
-            }
-            
-            // or even
-            
-            have : {
-                title : 'Joosified'
-            }
-        })
-        
-[Details on Joose attributes](http://openjsan.org/go?l=Joose.Manual.Attributes)
 
 
 Explicit metaclass specification
 --------------------------------
 
 Some of the classes in ExtJS framework are defined outside of its class system, using "raw JavaScript".
-Such classes will have the low-level metaclass `Joose.Proto.Class`. If you will inherit from such class, 
-you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case
-for Ext >3.0, but still.
+Such classes will have the low-level metaclass `Joose.Proto.Class` or no meta-class at all. If you wish to inherit from such class, 
+you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case for ExtJS > 3.0, but still.
 
 An example will be inheritance from Ext.Template:
 
         Class('My.Template', {
             //explicit metaclass
-            meta : JooseX.Bridge.Ext,
+            meta    : JooseX.Bridge.Ext,
             
-            isa : Ext.Template
+            isa     : Ext.Template
         })
+
+
+(OPTIONAL) COMBINING THIS EXTENSIONS WITH JooseX.Meta.Lazy 
+==========================================================
+
+Its known fact, that ExtJS class hierarchy is huge and somewhat bloated. Often you won't use many classes included in the `ext-all.js` package.
+But all those classes will take some time for initialization, despite never used (at least immediately). 
+Making them "lazy" will save you some startup time ("Lazy" classes are classes, which construction is delayed until the first instantiation). 
+
+However ExtJS was written in assumption that all classes are "eager", so if you are going to use JooseX.Meta.Lazy you need to
+use patched version of ExtJS. This version is available as the 'task-extjs' package from the [npm](http://npmjs.org) distribution platform.
+At the moment patched version contains ExtJS 3.1.0 version. 
+
+        <!-- Joose  -->
+        <script type="text/javascript" src="/jsan/Task/Joose/Core.js"></script>
+        
+        
+        <!-- JooseX.Meta.Lazy extension -->
+        <script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"></script>
+    
+        <!-- Ext bridge  -->
+        
+        <script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"></script>
+        
+        
+        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
+        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/LazyConvertor.js"></script>
+        
+        <script type="text/javascript" src="/jsan/Task/ExtJS/All.js"></script>
+        
+        <!-- eof Ext bridge  -->
+        
+
+
+        Class('Test.Run.Harness.Browser.UI.TestGrid', {
+        
+            xtype   : 'testgrid', 
+            
+            isa     : Ext.grid.GridPanel,
+            
+            does    : ExtX.Some.Role.For.Grid,
+            
+            ....
+        })
+        
+        
+        Ext.Container.meta.extend({
+            does : ExtX.Some.Role.For.Container
+        })
+
 
 
 GETTING HELP
 ============
 
-This extension is supported via github issues tracker: [http://github.com/SamuraiJack/joosex-bridge-ext/issues](http://github.com/SamuraiJack/joosex-bridge-ext/issues)
+This extension is supported via github issues tracker: <http://github.com/SamuraiJack/joosex-bridge-ext/issues>
 
-For general Joose questions you can also visit #joose on irc.freenode.org or the forum at: [http://joose.it/forum](http://joose.it/forum) 
+You can also ask questions at IRC channel : [#joose](http://webchat.freenode.net/?randomnick=1&channels=joose&prompt=1)
+ 
+Or the mailing list: <http://groups.google.com/group/joose-js>
 
 
 SEE ALSO
 ========
 
-[http://github.com/SamuraiJack/joosex-bridge-ext/](http://github.com/SamuraiJack/joosex-bridge-ext/)
+Joose web-site: <http://joose.it>
 
-Web page of this package
+General documentation for Joose: <http://joose.github.com/Joose/>
 
-[http://openjsan.org/go/?l=Joose](http://openjsan.org/go/?l=Joose)
-
-General documentation for Joose
+JooseX.Meta.Lazy documentation: <http://samuraijack.github.com/JooseX-Meta-Lazy>
 
 
 BUGS
@@ -250,7 +245,7 @@ BUGS
 
 All complex software has bugs lurking in it, and this module is no exception.
 
-Please report any bugs through the web interface at [http://github.com/SamuraiJack/joosex-bridge-ext/issues](http://github.com/SamuraiJack/joosex-bridge-ext/issues)
+Please report any bugs through the web interface at <http://github.com/SamuraiJack/joosex-bridge-ext/issues>
 
 
 
@@ -264,7 +259,7 @@ Nickolay Platonov [nplatonov@cpan.org](mailto:nplatonov@cpan.org)
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright (c) 2009, Nickolay Platonov
+Copyright (c) 2009-2010, Nickolay Platonov
 
 All rights reserved.
 

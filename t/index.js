@@ -23,7 +23,7 @@ Harness.configure({
         'JooseX.Bridge.Ext',
         'JooseX.Bridge.Ext.Convertor',
         
-        "jsan:Task.ExtJS.Debug.All"
+        "jsan:Task.ExtJS.All"
     ]
 })
 

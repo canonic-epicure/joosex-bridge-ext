@@ -11,14 +11,15 @@ SYNOPSIS
         <script type="text/javascript" src="/jsan/Task/Joose/Core.js"></script>
         
     
-        <!-- ExtJS adapter -->
+        <!-- ExtJS bridged  -->
         <script type="text/javascript" src="ext-3.3.1/adapter/ext/ext-base.js"></script>
         
         <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
+        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/Convertor.js"></script>
         
         <script type="text/javascript" src="ext-3.3.1/ext-all.js"></script>
         
-        <!-- eof Ext bridge  -->
+        <!-- eof ExtJS bridged  -->
         
 
 
@@ -39,6 +40,22 @@ SYNOPSIS
         })
         
 
+INSTALLATION
+============
+
+See [Joose docs](http://joose.github.com/Joose) for installation instructions. 
+
+From `npm`:
+    
+    > [sudo] npm install joosex-bridge-ext
+    
+Or you can download the tarball from one the sites:
+
+<http://nodul.es/modules/joosex-bridge-ext>
+
+<http://npm.mape.me/> (filter the modules for `joosex-bridge-ext` term)
+
+
 
 DESCRIPTION
 ===========
@@ -46,27 +63,17 @@ DESCRIPTION
 `JooseX.Bridge.Ext` is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefer).
 
 It transparently turns all ExtJS classes into Joose classes, and allows you to use any of Joose features for them.
-Pleas refer to Joose [documentation](http://joose.github.com/Joose/), to know why you might want to do that :) 
+Pleas refer to Joose [documentation](http://joose.github.com/Joose/), to know why you might want to do that :)
+
+This extension will work with unmodified ExtJS sources! 
 
 
 EXAMPLES
 ========
 
-        Class('My.Panel', {
-            isa : Ext.Panel
-        })
-        
-        
-        // automatically register the class with its name as default xtype:
-        
-        var panel = Ext.ComponentMgr.create({
-            xtype : 'My.Panel'
-        })
-        
-        
         Class('Test.Run.Harness.Browser.UI.TestGrid', {
         
-            // custom xtype
+            // custom xtype, if not provided - class name will be used
             xtype   : 'testgrid', 
             
             isa     : Ext.grid.GridPanel,
@@ -120,10 +127,7 @@ First, include Joose on your page. Then, between ExtJS adapter and main sources,
 
 This package comes with two converters : `JooseX.Bridge.Ext.Convertor` and `JooseX.Bridge.Ext.LazyConvertor`.
 
-The 2nd convertor requires `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to `JooseX.Meta.Lazy` 
-[documentation](http://samuraijack.github.com/JooseX-Meta-Lazy) for details.
-
-See the above for examples how you can use new metaclass.
+The 2nd converter requires `JooseX.Meta.Lazy` installed, and makes all classes lazy. Please refer to the section below for details.
 
 
 `xtype` builder
@@ -153,9 +157,8 @@ Explicit metaclass specification
 --------------------------------
 
 Some of the classes in ExtJS framework are defined outside of its class system, using "raw JavaScript".
-Such classes will have the low-level metaclass `Joose.Proto.Class`. If you will inherit from such class, 
-you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case
-for ExtJS > 3.0, but still.
+Such classes will have the low-level metaclass `Joose.Proto.Class` or no meta-class at all. If you wish to inherit from such class, 
+you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case for ExtJS > 3.0, but still.
 
 An example will be inheritance from Ext.Template:
 
@@ -167,14 +170,22 @@ An example will be inheritance from Ext.Template:
         })
 
 
-COMBINING THIS EXTENSIONS WITH JooseX.Meta.Lazy
-===============================================
+(OPTIONAL) COMBINING THIS EXTENSIONS WITH JooseX.Meta.Lazy 
+==========================================================
+
+Its known fact, that ExtJS class hierarchy is huge and somewhat bloated. Often you won't use many classes included in the `ext-all.js` package.
+But all those classes will take some time for initialization, despite never used (at least immediately). 
+Making them "lazy" will save you some startup time ("Lazy" classes are classes, which construction is delayed until the first instantiation). 
+
+However ExtJS was written in assumption that all classes are "eager", so if you are going to use JooseX.Meta.Lazy you need to
+use patched version of ExtJS. This version is available as the 'task-extjs' package from the [npm](http://npmjs.org) distribution platform.
+At the moment patched version contains ExtJS 3.1.0 version. 
 
         <!-- Joose  -->
         <script type="text/javascript" src="/jsan/Task/Joose/Core.js"></script>
         
         
-        <!-- Optional JooseX.Meta.Lazy extension  -->
+        <!-- JooseX.Meta.Lazy extension -->
         <script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"></script>
     
         <!-- Ext bridge  -->
@@ -183,7 +194,7 @@ COMBINING THIS EXTENSIONS WITH JooseX.Meta.Lazy
         
         
         <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"></script>
-        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/[Lazy]Convertor.js"></script>
+        <script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/LazyConvertor.js"></script>
         
         <script type="text/javascript" src="/jsan/Task/ExtJS/All.js"></script>
         
@@ -225,6 +236,8 @@ SEE ALSO
 Joose web-site: <http://joose.it>
 
 General documentation for Joose: <http://joose.github.com/Joose/>
+
+JooseX.Meta.Lazy documentation: <http://samuraijack.github.com/JooseX-Meta-Lazy>
 
 
 BUGS
