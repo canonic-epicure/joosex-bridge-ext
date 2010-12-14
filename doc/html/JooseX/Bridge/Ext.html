@@ -14,20 +14,15 @@
     &lt;script type="text/javascript" src="/jsan/Task/Joose/Core.js"&gt;&lt;/script&gt;
 
 
-    &lt;!-- Optional JooseX.Meta.Lazy extension  --&gt;
-    &lt;script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"&gt;&lt;/script&gt;
-
-    &lt;!-- Ext bridge  --&gt;
-
-    &lt;script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"&gt;&lt;/script&gt;
-
+    &lt;!-- ExtJS bridged  --&gt;
+    &lt;script type="text/javascript" src="ext-3.3.1/adapter/ext/ext-base.js"&gt;&lt;/script&gt;
 
     &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/[Lazy]Convertor.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/Convertor.js"&gt;&lt;/script&gt;
 
-    &lt;script type="text/javascript" src="/jsan/Task/ExtJS/All.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="ext-3.3.1/ext-all.js"&gt;&lt;/script&gt;
 
-    &lt;!-- eof Ext bridge  --&gt;
+    &lt;!-- eof ExtJS bridged  --&gt;
 
 
 
@@ -48,41 +43,36 @@
     })
 </code></pre>
 
+<h1 id="installation">INSTALLATION</h1>
+
+<p>See <a href="http://joose.github.com/Joose">Joose docs</a> for installation instructions. </p>
+
+<p>From <code>npm</code>:</p>
+
+<pre><code>&gt; [sudo] npm install joosex-bridge-ext
+</code></pre>
+
+<p>Or you can download the tarball from one the sites:</p>
+
+<p><a href="http://nodul.es/modules/joosex-bridge-ext">http://nodul.es/modules/joosex-bridge-ext</a></p>
+
+<p><a href="http://npm.mape.me/">http://npm.mape.me/</a> (filter the modules for <code>joosex-bridge-ext</code> term)</p>
+
 <h1 id="description">DESCRIPTION</h1>
 
 <p><code>JooseX.Bridge.Ext</code> is a custom metaclass, which bridges the class system of ExtJS framework to Joose (or vice-versa, as you prefer).</p>
 
 <p>It transparently turns all ExtJS classes into Joose classes, and allows you to use any of Joose features for them.
-Pleas refer to Joose <a href="http://openjsan.org/go/?l=Joose">documentation</a>, to know why you might want to do that :) </p>
+Pleas refer to Joose <a href="http://joose.github.com/Joose/">documentation</a>, to know why you might want to do that :)</p>
+
+<p>This extension will work with unmodified ExtJS sources! </p>
 
 <h1 id="examples">EXAMPLES</h1>
 
-<pre><code>    ExtClass('My.Panel', {
-        isa : Ext.Panel
-    })
+<pre><code>    Class('Test.Run.Harness.Browser.UI.TestGrid', {
 
-
-    // equivalent of:
-
-    Class('My.Panel', {
-        meta : JooseX.Bridge.Ext,
-
-        isa : Ext.Panel
-    })
-
-
-    // automatically register the class with its name as default xtype:
-
-    var panel = Ext.ComponentMgr.create({
-        xtype : 'My.Panel'
-    })
-
-
-    // "meta : JooseX.Bridge.Ext" - can be omitted, custom xtype can be specified:
-
-    Class('Test.Run.Harness.Browser.UI.TestGrid', {
-
-        xtype   : 'testgrid', //custom xtype
+        // custom xtype, if not provided - class name will be used
+        xtype   : 'testgrid', 
 
         isa     : Ext.grid.GridPanel,
 
@@ -131,14 +121,11 @@ Pleas refer to Joose <a href="http://openjsan.org/go/?l=Joose">documentation</a>
 
 <h1 id="usage">USAGE</h1>
 
-<p>First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the convertors.</p>
+<p>First, include Joose on your page. Then, between ExtJS adapter and main sources, insert this package and one of the converters.</p>
 
-<p>This package comes with two convertors : <code>JooseX.Bridge.Ext.Convertor</code> and <code>JooseX.Bridge.Ext.LazyConvertor</code>.</p>
+<p>This package comes with two converters : <code>JooseX.Bridge.Ext.Convertor</code> and <code>JooseX.Bridge.Ext.LazyConvertor</code>.</p>
 
-<p>The 2nd convertor requires <code>JooseX.Meta.Lazy</code> installed, and makes all classes lazy. Please refer to <code>JooseX.Meta.Lazy</code> 
-<a href="http://openjsan.org/go?l=JooseX.Meta.Lazy">documentation</a> for details.</p>
-
-<p>See the above for examples how you can use new metaclass.</p>
+<p>The 2nd converter requires <code>JooseX.Meta.Lazy</code> installed, and makes all classes lazy. Please refer to the section below for details.</p>
 
 <h2 id="xtypebuilder"><code>xtype</code> builder</h2>
 
@@ -153,64 +140,70 @@ the metaclass needs to be explicitly specified (see <a href="#explicitmetaclasss
 
 <h1 id="caveats">CAVEATS</h1>
 
-<p>taclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
+<p>This metaclass unifies two class systems, which uses different approaches to class construction. Thus appears some caveats.
 Make sure you've read this section if you have any problems using the bridge.</p>
-
-<h2 id="attributesettersandextjsmethods">Attribute setters and ExtJS methods</h2>
-
-<p>The native setter method may be called too early - before the ExtJS instance has been correctly initialize.</p>
-
-<p>For example, this declaration will throw an exception:</p>
-
-<pre><code>    Class('My.Panel', {
-        isa : Ext.Panel,
-
-        has : {
-            title : {
-                is : 'rw',
-                init : 'Joosified'
-            }
-        }
-    })
-</code></pre>
-
-<p><code>Ext.Panel</code> have <code>setTitle</code> method, which Joose treats like setter, and tries to initialize the attribute with it (before call to ExtJS constructor).
-However the call to <code>setTitle</code> relies on already initialized instance (it will fire the 'titlechange' event), so 
-the exception raises.</p>
-
-<p>The solution for such situations will be to use attributes w/o setters or even basic attributes:</p>
-
-<pre><code>    Class('My.Panel', {
-        isa : Ext.Panel,
-
-        has : {
-            title : 'Joosified'
-        }
-
-        // or even
-
-        have : {
-            title : 'Joosified'
-        }
-    })
-</code></pre>
-
-<p><a href="http://openjsan.org/go?l=Joose.Manual.Attributes">Details on Joose attributes</a></p>
 
 <h2 id="explicitmetaclassspecification">Explicit metaclass specification</h2>
 
 <p>Some of the classes in ExtJS framework are defined outside of its class system, using "raw JavaScript".
-Such classes will have the low-level metaclass <code>Joose.Proto.Class</code>. If you will inherit from such class, 
-you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case
-for Ext >3.0, but still.</p>
+Such classes will have the low-level metaclass <code>Joose.Proto.Class</code> or no meta-class at all. If you wish to inherit from such class, 
+you will need to explicitly specify the metaclass, to use any advanced Joose feature. This should be a rare case for ExtJS > 3.0, but still.</p>
 
 <p>An example will be inheritance from Ext.Template:</p>
 
 <pre><code>    Class('My.Template', {
         //explicit metaclass
-        meta : JooseX.Bridge.Ext,
+        meta    : JooseX.Bridge.Ext,
 
-        isa : Ext.Template
+        isa     : Ext.Template
+    })
+</code></pre>
+
+<h1 id="optionalcombiningthisextensionswithjoosex.meta.lazy">(OPTIONAL) COMBINING THIS EXTENSIONS WITH JooseX.Meta.Lazy </h1>
+
+<p>Its known fact, that ExtJS class hierarchy is huge and somewhat bloated. Often you won't use many classes included in the <code>ext-all.js</code> package.
+But all those classes will take some time for initialization, despite never used (at least immediately). 
+Making them "lazy" will save you some startup time ("Lazy" classes are classes, which construction is delayed until the first instantiation). </p>
+
+<p>However ExtJS was written in assumption that all classes are "eager", so if you are going to use JooseX.Meta.Lazy you need to
+use patched version of ExtJS. This version is available as the 'task-extjs' package from the <a href="http://npmjs.org">npm</a> distribution platform.
+At the moment patched version contains ExtJS 3.1.0 version. </p>
+
+<pre><code>    &lt;!-- Joose  --&gt;
+    &lt;script type="text/javascript" src="/jsan/Task/Joose/Core.js"&gt;&lt;/script&gt;
+
+
+    &lt;!-- JooseX.Meta.Lazy extension --&gt;
+    &lt;script type="text/javascript" src="/jsan/JooseX/Meta/Lazy.js"&gt;&lt;/script&gt;
+
+    &lt;!-- Ext bridge  --&gt;
+
+    &lt;script type="text/javascript" src="/jsan/Task/ExtJS/Adapter/Ext.js"&gt;&lt;/script&gt;
+
+
+    &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="/jsan/JooseX/Bridge/Ext/LazyConvertor.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="/jsan/Task/ExtJS/All.js"&gt;&lt;/script&gt;
+
+    &lt;!-- eof Ext bridge  --&gt;
+
+
+
+    Class('Test.Run.Harness.Browser.UI.TestGrid', {
+
+        xtype   : 'testgrid', 
+
+        isa     : Ext.grid.GridPanel,
+
+        does    : ExtX.Some.Role.For.Grid,
+
+        ....
+    })
+
+
+    Ext.Container.meta.extend({
+        does : ExtX.Some.Role.For.Container
     })
 </code></pre>
 
@@ -218,17 +211,17 @@ for Ext >3.0, but still.</p>
 
 <p>This extension is supported via github issues tracker: <a href="http://github.com/SamuraiJack/joosex-bridge-ext/issues">http://github.com/SamuraiJack/joosex-bridge-ext/issues</a></p>
 
-<p>For general Joose questions you can also visit #joose on irc.freenode.org or the forum at: <a href="http://joose.it/forum">http://joose.it/forum</a> </p>
+<p>You can also ask questions at IRC channel : <a href="http://webchat.freenode.net/?randomnick=1&amp;channels=joose&amp;prompt=1">#joose</a></p>
+
+<p>Or the mailing list: <a href="http://groups.google.com/group/joose-js">http://groups.google.com/group/joose-js</a></p>
 
 <h1 id="seealso">SEE ALSO</h1>
 
-<p><a href="http://github.com/SamuraiJack/joosex-bridge-ext/">http://github.com/SamuraiJack/joosex-bridge-ext/</a></p>
+<p>Joose web-site: <a href="http://joose.it">http://joose.it</a></p>
 
-<p>Web page of this package</p>
+<p>General documentation for Joose: <a href="http://joose.github.com/Joose/">http://joose.github.com/Joose/</a></p>
 
-<p><a href="http://openjsan.org/go/?l=Joose">http://openjsan.org/go/?l=Joose</a></p>
-
-<p>General documentation for Joose</p>
+<p>JooseX.Meta.Lazy documentation: <a href="http://samuraijack.github.com/JooseX-Meta-Lazy">http://samuraijack.github.com/JooseX-Meta-Lazy</a></p>
 
 <h1 id="bugs">BUGS</h1>
 
@@ -242,7 +235,7 @@ for Ext >3.0, but still.</p>
 
 <h1 id="copyrightandlicense">COPYRIGHT AND LICENSE</h1>
 
-<p>Copyright (c) 2009, Nickolay Platonov</p>
+<p>Copyright (c) 2009-2010, Nickolay Platonov</p>
 
 <p>All rights reserved.</p>
 
