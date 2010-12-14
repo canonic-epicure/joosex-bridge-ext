@@ -31,9 +31,6 @@ StartTest(function(t) {
     })
     
     t.ok(panel.el.dom, "Panel was rendered correctly")
-    
-    t.ok(panel.attr == null, "'attr' uses custom setter")
-    t.ok(panel.hiddenSideEffect == 'foo', "Which initialize it in some unpredictable way")
 
     t.done()
 })    
