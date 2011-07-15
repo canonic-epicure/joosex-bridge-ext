@@ -2,6 +2,8 @@ Release history for JooseX-Bridge-Ext:
 
 {{ $NEXT }}
 
+0.3.2     2011-07-15 19:33
+
     - re-release for npm 1.0
 
 0.3.1     2011-01-12 18:42
