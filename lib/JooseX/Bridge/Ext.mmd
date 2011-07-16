@@ -47,7 +47,7 @@ See [Joose docs](http://joose.github.com/Joose) for installation instructions.
 
 From `npm`:
     
-    > [sudo] npm install joosex-bridge-ext
+    > [sudo] npm install joosex-bridge-ext --unsafe-perm=true
     
 Or you can download the tarball from one the sites:
 
